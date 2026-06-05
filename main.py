@@ -4,17 +4,15 @@ if __name__ == "__main__":
 
     while True:
         print("Enter 1 to Search for an item price: ")
-        print("Enter 2 to print prices: ",)
-        print("Enter 3 to calculate the best buy and sell prices: ")
-        print("Enter 4 to exit: ")
+        print("Enter 2 to exit: ")
 
         user_choice = input("Enter your choice: ")
 
         if user_choice == '1':
             search_item = input("Enter the item you want to search for: ")
 
-            print("Cities Name: Bridgewatch, Caerleon, Lymhurst, Martlock, Thetford, Fort Sterling,Black Market")
-            location = input("Enter the location(comma seperated): ")
+            location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Black Market,Brecilien"
+
 
             matched_items = search_items(search_item)
 
@@ -24,18 +22,14 @@ if __name__ == "__main__":
 
             else:
                 for i, item in enumerate(matched_items):
-                    print(f"{i + 1}. {item}")
+                    print(f"{i + 1}. {item['name']}")
                 user_pick = int(input("Pick A Number..:")) - 1
-                item_id = matched_items[user_pick].split(": ")[1]
-                item_id = item_id.strip()
+                item_id = matched_items[user_pick]['id']
                 data = fetch_prices(item_id, location)
-               
+                print_prices(data)
+                analyze_prices(data)
+
         elif user_choice == '2':
-            print("===== Price Data =====")
-            print_prices(data)
-        elif user_choice == '3':
-            analyze_prices(data)
-        elif user_choice == '4':
             print("Exiting the program. Goodbye!")
             break
         else:
