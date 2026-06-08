@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Search Results</title>
+
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                padding: 20px;
+            }
+            .item-list{
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+                max-width: 400px;
+            }
+            .item-list a{
+                text-decoration: none;
+                color: black;
+                padding: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            .item-list a:hover{
+                background-color: #f0f0f0;
+                cursor: pointer;
+            }
+        </style>
+    </head>
+    <body>
+        <h1>Results for: {{query}}</h1>
+        <div class="item-list">
+        {% for item in results %}
+            <a href="/prices?id={{item.id}}&name={{item.name}}">{{item.name}}</a>
+        {% endfor %}
+        </div> 
+    </body>
+</html>

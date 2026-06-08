@@ -11,7 +11,7 @@ if __name__ == "__main__":
         if user_choice == '1':
             search_item = input("Enter the item you want to search for: ")
 
-            location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Black Market,Brecilien"
+            location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Brecilien"
 
 
             matched_items = search_items(search_item)

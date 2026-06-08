@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Market Prices</title>
+        <style>
+            body{
+                font-family: Arial, sans-serif;
+                background-color: #121212;
+                color: #ffffff;
+                padding: 20px;
+            }
+            h1{
+                color: #e0e0e0;
+            }
+            .back-btn{
+                display: inline-block;
+                margin-bottom: 20px;
+                color: #2ecc71;
+                text-decoration: none;
+            }
+            table{
+                width: 100%;
+                border-collapse: collapse;
+                margin-top: 10px;
+            }
+            th, td{
+                padding: 12px;
+                border: 1px solid #333;
+                margin-top: 10px;
+            }
+            th{
+                background-color: #1f1f1f;
+                color: #2ecc71;
+            }
+            tr:nth-child(even){
+                background-color: #1a1a1a;
+            }
+            .analysis-container{
+                background-color: #1e1e1e;
+                border-left: 5px solid #2ecc71;
+                padding: 20px;
+                margin-bottom: 25px;
+                border-radius: 4px;
+                max-width: 1000px;
+                box-shadow: 0 4px 6px rgba(0,0,0,0,3);
+            }
+            .analysis-card{
+                padding: 10px;
+                border-bottom: 1px solid #2d2d2d;
+                font-size: 15px;
+            }
+            .analysis-card:last-child{
+                border-bottom: none;
+            }
+            .highlight-city{
+                color: #3498db;
+                font-weight: bold;
+            }
+            .price-text{
+                color: #f1c40f;
+            }
+            .profit-badge{
+                display: inline-block;
+                background-color: rgba(46,204,113,0,2);
+                color: #2ecc71;
+                padding: 2px 8px;
+                border-radius: 4px;
+                margin-left: 10px;
+                font-weight: bold;
+                font-size: 14px;
+            }
+        </style>
+    </head>
+    <body>
+        <a class="back-btn" href="/">&larr; Back To Search</a>
+        <h1>Prices for: {{query}}</h1>
+        {% if analysis %}
+        <div class="analysis_card">
+            <h2>Market Flipping Recommendations</h2>
+            {% for route in analysis %}
+            <div class="analysis_card">
+                <strong>Quality {{route.quality}}:</strong>
+                Buy in <span class="highlight-city">{{route.buy_city}}</span> for <span class="price-text">{{route.buy_price}}</span> Silver
+                &rarr;
+                Sell in <span class="highlight-city">{{route.sell_city}}</span> for <span class="price-text">{{route.sell_price}}</span> Silver
+                <span class="profit-badge">Profit: {{route.profit}} Silver</span>
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        <table>
+            <thead>
+                <tr>
+                <th>City</th>
+                <th>Quality</th>
+                <th>Buy(Min)</th>
+                <th>Buy Order</th>
+                <th>Sell(Min)</th>
+                <th>Sell Order</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for price in results %}
+                    <tr>
+                        <td>{{price.get('city',Unknown)}}</td>
+                        <td>{{price.get('quality',0)}}</td>
+                        <td>{{price.get('buy_price_min',0)}}</td>
+                        <td>{{price.get('buy_price_max',0)}}</td>
+                        <td>{{price.get('sell_price_min',0)}}</td>
+                        <td>{{price.get('sell_price_max',0)}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </body>
+
+</html>

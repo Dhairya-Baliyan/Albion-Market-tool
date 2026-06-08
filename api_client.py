@@ -1,5 +1,6 @@
 import requests
 import time
+import os
 
 BASE_URL = "https://west.albion-online-data.com/api/v2/stats/prices"
 
@@ -20,13 +21,22 @@ def fetch_prices(item_id, location):
 
 
 def search_items(user_input):
-    search_url = "https://raw.githubusercontent.com/broderickhyman/ao-bin-dumps/master/formatted/items.txt"
-    response = requests.get(search_url)
-    list_of_items = response.text.splitlines()
+    if os.path.exists("items.txt"):
+        with open("items.txt", "r", encoding="utf-8") as f:
+            content = f.read()
+    else:
+        search_url = "https://raw.githubusercontent.com/broderickhyman/ao-bin-dumps/master/formatted/items.txt"
+        response = requests.get(search_url)
+        content = response.text
+        with open("items.txt", "w", encoding="utf-8") as f:
+            f.write(content)
+
+    list_of_items = content.splitlines()
     words_to_filter = ["NONTRADABLE", "NONTRADEABLE", "NON_TRADABLE", "ARENA", 
                        "LOOTBAG", "SKIN", "UNIQUE", "VANITY", "GUILD", "QUEST", 
                        "TROPHY", "FOUNDER", "MYSTERY", "XMAX", "HALLOWEEN", 
                        "EASTER", "EVENT"]
+    
     matches = []
     for item in list_of_items:
         parts = item.split(": ")
@@ -56,18 +66,26 @@ def print_prices(prices):
         return
 
     print("----- Detailed Price Information -----")
+    print(f"{'City':<15} {'Quality':<10} {'Sell Order':<12} {'Buy Order':<12}")
 
+    by_quality = {}
     for item in prices:
-        city = item.get('city', 'Unknown')
         quality = item.get('quality', 'Unknown')
-        sell = item.get('sell_price_min', 0)
-        buy = item.get('buy_price_max', 0)
-        if sell == 0 or buy == 0:
-            continue
+        if quality not in by_quality:
+            by_quality[quality] = []
+        by_quality[quality].append(item)
 
-        print(f"City    : {city}, Quality: {quality}")
-        print(f"Sell Min: {sell}, Buy Max: {buy}:")
-        print("--------------------------------------")
+    for quality in by_quality:
+        for item in by_quality[quality]:
+
+            city = item.get('city', 'Unknown')
+            sell_order = item.get('sell_price_min', 0)
+            buy_order = item.get('buy_price_max', 0)
+
+            if sell_order == 0 and buy_order == 0:
+                continue
+
+            print(f"{city:<15} {quality:<10} {sell_order:<12} {buy_order:<12}")
 
 def analyze_prices(prices):
     if not prices:
@@ -80,31 +98,29 @@ def analyze_prices(prices):
         if quality not in by_quality:
             by_quality[quality] = []
         by_quality[quality].append(item)
-    
-    print("-----Price Analysis-----")
+    results= []
 
-    for quality in by_quality:
-        sell_order = None
-        sell_city = None
-        buy_order = 0
-        buy_city = None
-        for item in by_quality[quality]:
-            city = item.get('city', 'Unknown')
-            sell = item.get('sell_price_min', 0)
-            buy = item.get('buy_price_max', 0)
-            if sell > 0:
-                if sell_order is None or sell < sell_order:
-                    sell_order = sell
-                    sell_city = city
-            if buy > buy_order:
-                buy_order = buy
-                buy_city = city
-        
-        if sell_city and buy_city:
-            profit = sell_order - buy_order
-            if profit > 0:
-                print(f"Quality {quality}")
-                print(f"Buy in: {buy_city} for {buy_order} Silver")
-                print(f"Sell in: {sell_city} for {sell_order} Silver")
-                print(f"Profit: {profit} Silver")
-                print("--------------------------------------")  
+    for quality, items in by_quality.items():
+        for city_1 in items:
+            buy_price = city_1.get('sell_price_min',0)
+            buy_city = city_1.get('city', 'Unknown')
+            if buy_price == 0:
+                continue
+            for city_2 in items:
+                sell_price = city_2.get('sell_price_min',0)
+                sell_city = city_2.get('city','Unknown')
+                if buy_city == sell_city or sell_price == 0:
+                    continue
+                profit = int((sell_price * 0.96) - buy_price)
+                if profit > 0:
+                    results.append({
+                    "quality": quality,
+                    "buy_city": buy_city,
+                    "buy_price": buy_price,
+                    "sell_city": sell_city,
+                    "sell_price": sell_price,
+                    "profit": profit
+                    })
+    
+    results.sort(key=lambda x: x['profit'], reverse=True)
+    return results
