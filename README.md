@@ -71,7 +71,7 @@ arbitrage-ao/
   market prices without opening the game repeatedly.
 - I am looking forward to add more useful features as 
   part of my coding journey, I want to learn as I build
-  something usefull.
+  something useful.
 - The next project will require me to have a deep understanding 
   of everything as it is concerned with real life issues, So I
   am really looking forward to clear my basic concepts and build IT.
