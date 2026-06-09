@@ -111,7 +111,11 @@ def analyze_prices(prices):
                 sell_city = city_2.get('city','Unknown')
                 if buy_city == sell_city or sell_price == 0:
                     continue
+                if sell_price < 1000:
+                    continue
                 profit = int((sell_price * 0.96) - buy_price)
+                if profit <= 0 or profit > 50000:
+                    continue
                 if profit > 0:
                     results.append({
                     "quality": quality,
@@ -123,4 +127,5 @@ def analyze_prices(prices):
                     })
     
     results.sort(key=lambda x: x['profit'], reverse=True)
+    results = results[:15]
     return results

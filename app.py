@@ -9,7 +9,9 @@ def home():
 
 @app.route('/search')
 def search():
-    item = request.args.get('item')
+    item = request.args.get('item', '')
+    if not item:
+        return render_template('index.html', error="Please Enter A Valid Search Term.")
     results = search_items(item)
     return render_template('results.html', results=results, query=item)
 
@@ -21,8 +23,6 @@ def prices():
     prices_data = fetch_prices(item_id,location)
     analysis = analyze_prices(prices_data)
     print(f"Analysis results count: {len(analysis)}")
-    for a in analysis:
-        print(a)
     filtered_prices = []
     for item in prices_data:
         sell_min = item.get('sell_price_min',0)
