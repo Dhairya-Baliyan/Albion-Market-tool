@@ -1,118 +1,275 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <title>Market Prices</title>
-        <style>
-            body{
-                font-family: Arial, sans-serif;
-                background-color: #121212;
-                color: #ffffff;
-                padding: 20px;
-            }
-            h1{
-                color: #e0e0e0;
-            }
-            .back-btn{
-                display: inline-block;
-                margin-bottom: 20px;
-                color: #2ecc71;
-                text-decoration: none;
-            }
-            table{
-                width: 100%;
-                border-collapse: collapse;
-                margin-top: 10px;
-            }
-            th, td{
-                padding: 12px;
-                border: 1px solid #333;
-                margin-top: 10px;
-            }
-            th{
-                background-color: #1f1f1f;
-                color: #2ecc71;
-            }
-            tr:nth-child(even){
-                background-color: #1a1a1a;
-            }
-            .analysis-container{
-                background-color: #1e1e1e;
-                border-left: 5px solid #2ecc71;
-                padding: 20px;
-                margin-bottom: 25px;
-                border-radius: 4px;
-                max-width: 1000px;
-                box-shadow: 0 4px 6px rgba(0,0,0,0,3);
-            }
-            .analysis-card{
-                padding: 10px;
-                border-bottom: 1px solid #2d2d2d;
-                font-size: 15px;
-            }
-            .analysis-card:last-child{
-                border-bottom: none;
-            }
-            .highlight-city{
-                color: #3498db;
-                font-weight: bold;
-            }
-            .price-text{
-                color: #f1c40f;
-            }
-            .profit-badge{
-                display: inline-block;
-                background-color: rgba(46,204,113,0,2);
-                color: #2ecc71;
-                padding: 2px 8px;
-                border-radius: 4px;
-                margin-left: 10px;
-                font-weight: bold;
-                font-size: 14px;
-            }
-        </style>
-    </head>
-    <body>
-        <a class="back-btn" href="/">&larr; Back To Search</a>
-        <h1>Prices for: {{query}}</h1>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width">
+    <title>{{ query }} - Arbitrage.ao</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *{ 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body{
+            background: #13131a;
+            color: #e2e2e8;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        nav{
+            border-bottom: 1px solid #1e1e2e;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+            background: #0f0f16;
+        }
+
+        .logo{
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo span{ 
+            color: #6366f1; 
+        }
+
+        .live-badge{
+            margin-left: auto;
+            background: #1a1a2e;
+            color: #6366f1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .container{
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 40px 24px;
+        }
+
+        .back-btn{
+            background: none;
+            border: none;
+            color: #6b6b80;
+            cursor: pointer;
+            font-size: 14px;
+            padding: 0;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-family: 'Inter', sans-serif;
+            text-decoration: none;
+        }
+
+        .back-btn:hover{ color: #e2e2e8; 
+        }
+
+        h2{
+            font-size: 22px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 32px;
+        }
+
+        .section-label{
+            color: #6b6b80;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+        .profit-list{
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 40px;
+        }
+
+        .profit-card{
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 8px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .profit-card.best{
+            border-color: #6366f1;
+        }
+
+        .best-badge{
+            background: #6366f1;
+            color: #fff;
+            font-size: 10px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 4px;
+        }
+
+        .quality-badge{
+            color: #6b6b80;
+            font-size: 12px;
+        }
+
+        .profit-amount{
+            margin-left: auto;
+            color: #4ade80;
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .no-profit{
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 8px;
+            padding: 24px;
+            color: #6b6b80;
+            text-align: center;
+        }
+        .table-wrap{
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .table-header{
+            display: grid;
+            grid-template-columns: 150px 80px 110px 110px 110px 110px;
+            padding: 10px 18px;
+            background: #14142a;
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        .table-header span{
+            color: #6b6b80;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .table-row{
+            display: grid;
+            grid-template-columns: 150px 80px 110px 110px 110px 110px;
+            padding: 11px 18px;
+            border-bottom: 1px solid #1e1e2e;
+            align-items: center;
+        }
+
+        .table-row:last-child{ 
+            border-bottom: none;
+        }
+
+        .table-row span{
+            font-size: 13px;
+            color: #e2e2e8;
+        }
+
+        .table-row .dim { 
+            color: #3a3a4e; 
+        }
+
+        .table-row .accent{
+            color: #6366f1;
+            font-weight: 600;
+        }
+
+        .city-Caerleon      { color: #f87171; font-weight: 600; }
+        .city-Bridgewatch   { color: #fb923c; font-weight: 600; }
+        .city-Martlock      { color: #60a5fa; font-weight: 600; }
+        .city-Lymhurst      { color: #4ade80; font-weight: 600; }
+        .city-Thetford      { color: #c084fc; font-weight: 600; }
+        .city-Fort-Sterling { color: #34d399; font-weight: 600; }
+        .city-Brecilien     { color: #f472b6; font-weight: 600; }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">arbitrage<span>.ao</span></a>
+        <span class="live-badge">Live Data</span>
+    </nav>
+
+    <div class="container">
+        <a href="javascript:history.back()" class="back-btn">← Back to results</a>
+
+        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 32px;">
+            <img 
+            src="https://render.albiononline.com/v1/item/{{ request.args.get('id') }}.png"
+            width="70" 
+            height="70"
+            style="border-radius:8px; background:#1a1a2e;"
+            onerror="this.style.display='none'">
+            <h2 style="margin-bottom:0">{{ query }}</h2>
+        </div>
+
+        <p class="section-label">Best flip opportunities · profit after 4% tax</p>
+
         {% if analysis %}
-        <div class="analysis_card">
-            <h2>Market Flipping Recommendations</h2>
+        <div class="profit-list">
             {% for route in analysis %}
-            <div class="analysis_card">
-                <strong>Quality {{route.quality}}:</strong>
-                Buy in <span class="highlight-city">{{route.buy_city}}</span> for <span class="price-text">{{route.buy_price}}</span> Silver
-                &rarr;
-                Sell in <span class="highlight-city">{{route.sell_city}}</span> for <span class="price-text">{{route.sell_price}}</span> Silver
-                <span class="profit-badge">Profit: {{route.profit}} Silver</span>
+            <div class="profit-card {% if loop.first %}best{% endif %}">
+                {% if loop.first %}
+                <span class="best-badge">BEST</span>
+                {% endif %}
+                <span class="quality-badge">Q{{ route.quality }}</span>
+                <span>Buy in</span>
+                <span class="city-{{ route.buy_city | replace(' ', '-') }}">{{ route.buy_city }}</span>
+                <span style="color:#6b6b80">for {{ route.buy_price | int }}</span>
+                <span style="color:#6b6b80">→</span>
+                <span>Sell in</span>
+                <span class="city-{{ route.sell_city | replace(' ', '-') }}">{{ route.sell_city }}</span>
+                <span style="color:#6b6b80">for {{ route.sell_price | int }}</span>
+                <span class="profit-amount">+{{ route.profit | int }} silver</span>
             </div>
             {% endfor %}
         </div>
+        {% else %}
+        <div class="no-profit">
+            No profitable flip opportunities found right now.
+        </div>
         {% endif %}
-        <table>
-            <thead>
-                <tr>
-                <th>City</th>
-                <th>Quality</th>
-                <th>Buy(Min)</th>
-                <th>Buy Order</th>
-                <th>Sell(Min)</th>
-                <th>Sell Order</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for price in results %}
-                    <tr>
-                        <td>{{price.get('city',Unknown)}}</td>
-                        <td>{{price.get('quality',0)}}</td>
-                        <td>{{price.get('buy_price_min',0)}}</td>
-                        <td>{{price.get('buy_price_max',0)}}</td>
-                        <td>{{price.get('sell_price_min',0)}}</td>
-                        <td>{{price.get('sell_price_max',0)}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </body>
 
+        <!-- Price Table -->
+        <p class="section-label" style="margin-top:40px">All prices by city</p>
+
+        <div class="table-wrap">
+            <div class="table-header">
+                <span>City</span>
+                <span>Quality</span>
+                <span>Buy Min</span>
+                <span>Buy Order</span>
+                <span>Sell Min</span>
+                <span>Sell Order</span>
+            </div>
+
+            {% for price in results %}
+            <div class="table-row">
+                <span class="city-{{ price.city | replace(' ', '-') }}">{{ price.city }}</span>
+                <span style="color:#6b6b80">{{ price.quality }}</span>
+                <span class="{% if price.buy_price_min == 0 %}dim{% endif %}">
+                    {% if price.buy_price_min == 0 %}—{% else %}{{ price.buy_price_min }}{% endif %}
+                </span>
+                <span class="{% if price.buy_price_max == 0 %}dim{% endif %}">
+                    {% if price.buy_price_max == 0 %}—{% else %}{{ price.buy_price_max }}{% endif %}
+                </span>
+                <span class="{% if price.sell_price_min == 0 %}dim{% else %}accent{% endif %}">
+                    {% if price.sell_price_min == 0 %}—{% else %}{{ price.sell_price_min }}{% endif %}
+                </span>
+                <span class="{% if price.sell_price_max == 0 %}dim{% endif %}">
+                    {% if price.sell_price_max == 0 %}—{% else %}{{ price.sell_price_max }}{% endif %}
+                </span>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</body>
 </html>

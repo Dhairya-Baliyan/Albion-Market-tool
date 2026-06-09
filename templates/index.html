@@ -1,207 +1,430 @@
 <!DOCTYPE html>
-<html lang ="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content ="width=device-width">
-        <title>Arbitrage.ao</title>
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-        <style>
-            *{
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
-            body{
-                background: #13131a;
-                color: #e2e2e8;
-                font-family: 'Inter', sans-serif;
-                font-size: 14px;
-            }
-            nav{
-                border-bottom: 1px solid #1e1e2e;
-                padding: 0 32px;
-                display: flex;
-                align-items: center;
-                height: 56px;
-                background: #0f0f16;
-            }
-            .logo{
-                font-size: 18px;
-                font-weight: 700;
-                color: #fff;
-                text-decoration: none;
-            }
-            .logo span{
-                color: #6366f1;
-            }
-            .live-badge{
-                margin-left: auto;
-                background: #1a1a2e;
-                color: #6366f1;
-                padding: 4px 10px;
-                border-radius: 20px;
-                font-size: 12px;
-                font-weight: 500;
-            }
-            .container{
-                max-width: 680px;
-                margin: 0 auto;
-                padding: 30px 24px;
-            }
-            h1{
-                font-size: 40px;
-                font-weight: 700;
-                color: #fff;
-                margin-bottom: 12px;
-                letter-spacing: -1px;
-                line-height: 1.2;
-            }
-            h1 span{
-                color: #6366f1;
-            }
-            .subtitle{
-                color: #6b6b80;
-                font-size: 16px;
-                margin-bottom: 20px;
-                line-height: 1.6;
-            }
-            .search-box{
-                display: flex;
-                background: #1a1a2e;
-                border: 1px solid #2a2a3e;
-                border-radius: 10px;
-                overflow:hidden;
-                margin-bottom: 24px;
-            }
-            .search-box input{
-                flex: 1;
-                background: transparent;
-                border: none;
-                outline: none;
-                color: #e2e2e8;
-                padding: 14px 18px;
-                font-size: 15px;
-                font-family: 'Inter', sans-serif;
-            }
-            .search-box button{
-                background: #6366f1;
-                border: none;
-                color: #fff;
-                padding: 14px 24px;
-                cursor: pointer;
-                font-size: 14px;
-                font-weight: 600;
-                font-family: 'Inter', sans-serif;
-            }
-            .search-box button:hover{
-                background: #5254cc;
-            }
-            .tags{
-                display: flex;
-                flex-wrap: wrap;
-                gap: 10px;
-                margin-bottom: 48px;
-            }
-            .tag{
-                background: #1a1a2e;
-                color: #8b8ba8;
-                padding: 6px 14px;
-                border-radius: 20px;
-                font-size: 13px;
-                border: 1px solid #2a2a3e;
-            }
-            .how-title{
-                color: #6b6b80;
-                font-size: 13px;
-                margin-bottom: 20px;
-                letter-spacing: 0.5px;
-                border-top: 1px solid #1e1e2e;
-                padding-top: 40px;
-            }
-            .steps{
-                display: flex;
-                flex-direction: column;
-                gap: 16px;      
-            }
-            .step{
-                display: flex;
-                gap: 16px;
-                align-items: flex-start;
-            }
-            .step-number{
-                width: 28px;
-                height: 28px;
-                background: #1a1a2e;
-                border-radius: 50%;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                color: #6366f1;
-                font-size: 13px;
-                font-weight: 700;
-                flex-shrink: 0;
-                border: 1px solid #2a2a3e;
-            }
-            .step-title{
-                color: #e2e2e8;
-                font-weight: 600;
-                margin-bottom: 4px;
-            }
-            .step-desc{
-                color: #6b6b80;
-                line-height: 1.5;
-            }
-        </style>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arbitrage.ao</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: #13131a;
+            color: #e2e2e8;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+        }
+
+        nav {
+            border-bottom: 1px solid #1e1e2e;
+            padding: 0 32px;
+            display: flex;
+            align-items: center;
+            height: 56px;
+            background: #0f0f16;
+        }
+
+        .logo {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            text-decoration: none;
+        }
+
+        .logo span {
+            color: #6366f1;
+        }
+
+        .live-badge {
+            margin-left: auto;
+            background: #1a1a2e;
+            color: #6366f1;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        h1 {
+            font-size: 40px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 12px;
+            letter-spacing: -1px;
+            line-height: 1.2;
+        }
+
+        h1 span {
+            color: #6366f1;
+        }
+
+        .subtitle {
+            color: #6b6b80;
+            font-size: 16px;
+            margin-bottom: 20px;
+            line-height: 1.6;
+        }
+
+        .search-box {
+            position: relative;
+            overflow: visible;
+            display: flex;
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 10px;
+            margin-bottom: 24px;
+        }
+
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            color: #e2e2e8;
+            padding: 14px 18px;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box button {
+            background: #6366f1;
+            border: none;
+            color: #fff;
+            padding: 14px 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .search-box button:hover {
+            background: #5254cc;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 48px;
+        }
+
+        .tag {
+            background: #1a1a2e;
+            color: #8b8ba8;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 13px;
+            border: 1px solid #2a2a3e;
+        }
+
+        .how-title {
+            color: #6b6b80;
+            font-size: 13px;
+            margin-bottom: 20px;
+            letter-spacing: 0.5px;
+            border-top: 1px solid #1e1e2e;
+            padding-top: 40px;
+        }
+
+        .steps {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .step {
+            display: flex;
+            gap: 16px;
+            align-items: flex-start;
+        }
+
+        .step-number {
+            width: 28px;
+            height: 28px;
+            background: #1a1a2e;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6366f1;
+            font-size: 13px;
+            font-weight: 700;
+            flex-shrink: 0;
+            border: 1px solid #2a2a3e;
+        }
+
+        .step-title {
+            color: #e2e2e8;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .step-desc {
+            color: #6b6b80;
+            line-height: 1.5;
+        }
+        .container {
+            max-width: 1040px; 
+            margin: 0 auto;
+            padding: 30px 24px;
+        }
+        .columns-wrapper {
+            display: flex;
+            gap: 40px;
+            align-items: flex-start;
+        }
+        .sidebar-left {
+            flex: 0 0 280px;
+            background: #1a1a2e;
+            border: 1px solid #2a2a3e;
+            border-radius: 10px;
+            padding: 20px;
+        }
+
+        .main-content-right {
+            flex: 1;
+        }
+
+        .showcase-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #2a2a3e;
+        }
+
+        .showcase-header h3 {
+            margin: 0;
+            font-size: 14px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .live-pulse {
+            color: #6366f1;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+        .opportunity-card {
+            background: #13131a;
+            border: 1px solid #2a2a3e;
+            border-left: 3px solid #6366f1;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+
+        .card-title {
+            font-weight: 600;
+            color: #e2e2e8;
+            font-size: 13px;
+            margin-bottom: 4px;
+        }
+
+        .card-route {
+            font-size: 12px;
+            color: #6b6b80;
+            margin-bottom: 6px;
+        }
+
+        .card-route .arrow {
+            color: #6366f1;
+            margin: 0 4px;
+        }
+
+        .card-profit {
+            color: #00ff9d; 
+            font-weight: 700;
+            font-size: 13px;
+            text-align: right;
+        }
+        .search-box {
+            position: relative;
+        }
+        .suggestions-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%; 
+            left: 0;
+            width: 100%; 
+            background-color: #1a1f2c; /
+            border: 1px solid #4a5568;
+            border-radius: 8px;
+            margin-top: 5px;
+            max-height: 250px; 
+            overflow-y: auto;
+            z-index: 99999; 
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+        .suggestion-item {
+            padding: 12px 16px;
+            cursor: pointer;
+            color: #ffffff;
+            font-size: 14px;
+            font-weight: 500;
+            border-bottom: 1px solid #2d3748;
+            transition: background-color 0.2s ease;
+        }
+        .suggestion-item:last-child {
+            border-bottom: none;
+        }
+        .suggestion-item:hover {
+            background-color: #2d3748;
+        }
+    </style>
     </head>
     <body>
+
         <nav>
             <a href="/" class="logo">arbitrage<span>.ao</span></a>
             <span class="live-badge">Live Data</span>
         </nav>
+
         <div class="container">
-            <h1>Albion Online<br>
-                <span>Market Prices</span>
-            </h1>
-            <p class="subtitle">
-                Search any item and instantly compare prices across all cities.
-                Find the best arbitrage oppurtunities with profit calculated after tax.
-            </p>
-            <form action="/search" method="GET" class="search-box">
-                <input type="text" name="item" placeholder="Search item.....(e.g Adept's Bag )">
-                <button type="submit">Search</button>
-            </form>
-            <div class="tags">
-                <span class="tag">7 Cities Tracked</span>
-                <span class="tag">4% Tax Included</span>
-                <span class="tag">All Qualities</span>
-                <span class="tag">Enchantement Level</span>
-                <span class="tag">Live API Data</span>
-            </div>
-            <div class="steps">
-                <div class="step">
-                    <div class="step-number">1</div>
-                    <div>
-                        <div class="step-title">Search any item.</div>
-                        <div class="step-dsc">Type a partial name-we'll find all matching items including enhantement level.</div>
+            
+            <div class="columns-wrapper">
+                
+                <aside class="sidebar-left">
+                    <div class="showcase-header">
+                        <h3>🔥 Top Flips</h3>
+                        <span class="live-pulse">● LIVE</span>
                     </div>
-                </div>
-                <div>
-                    <div class="step">
-                        <div class="step-number">2</div>
-                        <div>
-                            <div class="step-title">Pick Your Item.</div>
-                            <div class="step-dsc">Select the exact tier And enhancements from the results.</div>
+                    
+                    <div class="opportunities-list">
+                        {% for deal in opportunities %}
+                        <div class="opportunity-card">
+                            <div class="card-title">{{ deal.name }}</div>
+                            <div class="card-route">
+                                <span class="city">{{ deal.buy_city }}</span> 
+                                <span class="arrow">➔</span> 
+                                <span class="city">{{ deal.sell_city }}</span>
+                            </div>
+                            <div class="card-profit">+{{ "{:,}".format(deal.profit) }} Silver</div>
                         </div>
+                        {% else %}
+                        <div class="card-route" style="text-align: center; padding: 10px 0;">No active profit margins.</div>
+                        {% endfor %}
                     </div>
-                </div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <div>
-                        <div class="step-title">Compare prices</div>
-                        <div class="step-dsc">See prices across all cities and the best flip opportunities sorted by profit.</div>
+                </aside>
+
+                <div class="main-content-right">
+                    
+                    <h1>Albion Online<br><span>Market Prices</span></h1>
+                    <p class="subtitle">
+                        Search any item and instantly compare prices across all cities.
+                        Find the best arbitrage opportunities with profit calculated after tax.
+                    </p>
+                    
+                    <form action="/search" method="GET" class="search-box">
+                        <input type="text" name="item" id="search-input" placeholder="Search item.....(e.g Adept's Bag )">
+                        <button type="submit">Search</button>
+                        <div id="suggestions-box" class="suggestions-dropdown" ></div>
+                    </form>
+                    
+                    <div class="tags">
+                        <span class="tag">7 Cities Tracked</span>
+                        <span class="tag">4% Tax Included</span>
+                        <span class="tag">All Qualities</span>
+                        <span class="tag">Enchantment Level</span>
+                        <span class="tag">Live API Data</span>
                     </div>
-                </div>
-            </div>
-        </div>
+                    
+                    <div class="how-title">HOW TO USE THIS SITE</div>
+                    
+                    <div class="steps">
+                        
+                        <div class="step">
+                            <div class="step-number">1</div>
+                            <div>
+                                <div class="step-title">Search any item.</div>
+                                <div class="step-dsc">Type a partial name-we'll find all matching items including enhantement level.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">2</div>
+                            <div>
+                                <div class="step-title">Pick Your Item.</div>
+                                <div class="step-dsc">Select the exact tier And enhancements from the results.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="step">
+                            <div class="step-number">3</div>
+                            <div>
+                                <div class="step-title">Compare prices</div>
+                                <div class="step-dsc">See prices across all cities and the best flip opportunities sorted by profit.</div>
+                            </div>
+                        </div>
+                        
+                    </div> 
+
+                </div> 
+
+            </div> 
+        </div> 
+        <script>
+            const searchInput = document.getElementById('search-input');
+            const suggestionsBox = document.getElementById('suggestions-box');
+            if (!searchInput || !suggestionsBox) {
+                console.error("AUTOCOMPLETE ERROR: HTML elements are missing IDs!");
+            } else {
+                console.log("AUTOCOMPLETE SYSTEM: Ready and listening for typing...");
+            }
+
+            searchInput.addEventListener('input', async function() {
+                const query = searchInput.value.trim();
+                console.log(`Input event fired. Current text: "${query}"`);
+                
+                if (query.length < 1) {
+                    suggestionsBox.innerHTML = '';
+                    suggestionsBox.style.display = 'none';
+                    return;
+                }
+
+                try {
+                    console.log(`Fetching suggestions from server for: ${query}`);
+                    const response = await fetch(`/api/autocomplete?q=${encodeURIComponent(query)}`);
+                    const items = await response.json();
+                    
+                    console.log("Server responded with items:", items);
+
+                    if (items && items.length > 0) {
+                        suggestionsBox.innerHTML = items.map(item => `
+                            <div class="suggestion-item">${item.name}</div>
+                        `).join('');
+                        
+                        suggestionsBox.style.display = 'block';
+                        console.log("Dropdown should now be VISIBLE on screen.");
+
+                        document.querySelectorAll('.suggestion-item').forEach(element => {
+                            element.addEventListener('click', function() {
+                                console.log(`User clicked item: ${this.innerText}`);
+                                searchInput.value = this.innerText.trim();
+                                suggestionsBox.style.display = 'none';
+                                searchInput.closest('form').submit();
+                            });
+                        });
+                    } else {
+                        console.log("No matching items found. Hiding dropdown.");
+                        suggestionsBox.style.display = 'none';
+                    }
+                } catch (error) {
+                    console.error("Frontend fetch error:", error);
+                }
+            });
+
+            document.addEventListener('click', function(event) {
+                if (event.target !== searchInput && event.target !== suggestionsBox) {
+                    suggestionsBox.style.display = 'none';
+                }
+            });
+        </script>
     </body>
 </html>

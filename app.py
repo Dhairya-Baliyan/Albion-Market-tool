@@ -1,11 +1,20 @@
-from flask import Flask, render_template, request
-from api_client import search_items, fetch_prices, analyze_prices
+from flask import Flask, render_template, request, jsonify
+from api_client import search_items, fetch_prices, analyze_prices, get_top_opportunities,search_recommendations
 
 app = Flask(__name__)
 
 @app.route('/')
 def home():
-    return render_template('index.html')
+    opportunities = get_top_opportunities()
+    return render_template('index.html', opportunities=opportunities)
+
+@app.route('/api/autocomplete')
+def autocomplete():
+    query = request.args.get('q', '').strip()
+    if not query:
+        return jsonify([])
+    suggestions = search_recommendations(query)
+    return jsonify(suggestions)
 
 @app.route('/search')
 def search():
@@ -22,7 +31,6 @@ def prices():
     location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Brecilien"
     prices_data = fetch_prices(item_id,location)
     analysis = analyze_prices(prices_data)
-    print(f"Analysis results count: {len(analysis)}")
     filtered_prices = []
     for item in prices_data:
         sell_min = item.get('sell_price_min',0)
@@ -32,7 +40,7 @@ def prices():
         if sell_min == 0 and sell_max == 0 and buy_min == 0 and buy_max ==0:
             continue
         filtered_prices.append(item)
-    return render_template('prices.html', results=filtered_prices, query=item_name, analysis=analysis)
+    return render_template('prices.html', results=filtered_prices, query=item_name, analysis=analysis, item_id=item_id)
 
 if __name__ == '__main__':
     app.run(debug=True)

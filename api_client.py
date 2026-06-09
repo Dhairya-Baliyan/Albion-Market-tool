@@ -2,6 +2,10 @@ import requests
 import time
 import os
 
+_cache = None
+_cache_time = 0
+CACHE_DURATION = 1800
+
 BASE_URL = "https://west.albion-online-data.com/api/v2/stats/prices"
 
 def fetch_prices(item_id, location):
@@ -129,3 +133,105 @@ def analyze_prices(prices):
     results.sort(key=lambda x: x['profit'], reverse=True)
     results = results[:15]
     return results
+
+def get_top_opportunities():
+    global _cache, _cache_time
+    current_time = time.time()
+    if _cache and (current_time - _cache_time) < CACHE_DURATION:
+        return _cache   
+    popular_items = [
+        # Bags & Capes
+        {"id": "T4_BAG", "name": "Adept's Bag"},
+        {"id": "T5_BAG", "name": "Expert's Bag"},
+        {"id": "T6_BAG", "name": "Master's Bag"},
+        {"id": "T4_CAPE", "name": "Adept's Cape"},
+        {"id": "T5_CAPE", "name": "Expert's Cape"},
+        {"id": "T6_CAPE", "name": "Master's Cape"},
+        
+        # Faction Capes
+        {"id": "T4_CAPEITEM_FW_THETFORD", "name": "Adept's Thetford Cape"},
+        {"id": "T4_CAPEITEM_FW_LYMHURST", "name": "Adept's Lymhurst Cape"},
+        {"id": "T4_CAPEITEM_FW_FORTSTERLING", "name": "Adept's Fort Sterling Cape"},
+        
+        # Mounts
+        {"id": "T4_MOUNT_HORSE", "name": "Adept's Riding Horse"},
+        {"id": "T5_MOUNT_HORSE", "name": "Expert's Riding Horse"},
+        {"id": "T4_MOUNT_OX", "name": "Adept's Transport Ox"},
+        {"id": "T5_MOUNT_OX", "name": "Expert's Transport Ox"},
+        
+        # Consumables
+        {"id": "T7_MEAL_OMELETTE", "name": "Pork Omelette"},
+        {"id": "T8_MEAL_STEW", "name": "Beef Stew"},
+        {"id": "T7_MEAL_PORKPIE", "name": "Pork Pie"},
+        
+        # Materials
+        {"id": "RUNE", "name": "Rune"},
+        {"id": "SOUL", "name": "Soul"}
+    ]
+
+    results = []
+    location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Brecilien"
+    for item in popular_items:
+        prices = fetch_prices(item["id"], location)
+        if not prices:
+            continue
+        analysis = analyze_prices(prices)
+        if analysis:
+            best = analysis[0]
+            results.append({
+                "name": item["name"],
+                "id": item["id"],
+                "profit": best["profit"],
+                "buy_city": best["buy_city"],
+                "sell_city": best["sell_city"],
+                "quality": best["quality"]
+            })
+    
+    results.sort(key=lambda x: x["profit"], reverse=True)
+    results = results[:6]
+    _cache = results
+    _cache_time = current_time
+    return results  
+
+def search_recommendations(user_input):
+    raw_matches = search_items(user_input)
+    query = user_input.lower().strip()
+    scored_items = []
+    for item in raw_matches:
+        item_id = item["id"]
+        if "@" in item_id:
+            continue
+        name = item["name"].lower()
+        if name == query:
+            tier = 0
+        elif name.startswith(query):
+            tier = 1
+        elif f"{query}" in name:
+            tier = 3
+        else:
+            tier = 3
+        filter_words = ["_GROWN","_BABY","ARTEFACT","_SEED","_CROP",",MEAL","_FURNITUREITEM"]
+        penalty = 1 if any(kw in item_id for kw in filter_words) else 0
+
+        match_index = name.find(query)
+        name_length = len(name)
+        scored_items.append({
+            "tier": tier,
+            "penalty": penalty,
+            "match_index": match_index,
+            "length": name_length,
+            "item_data": item
+        })
+    scored_items.sort(key=lambda x: (x["tier"], x["penalty"], x["match_index"], x["length"]))
+    suggestions = []
+    seen_names = set()
+    for entry in scored_items:
+        item = entry["item_data"]
+        item_name = item.get('name') 
+        if item_name not in seen_names:
+            seen_names.add(item_name)
+            suggestions.append(item)
+        if len(suggestions) >= 6:
+            break
+    return suggestions
+
