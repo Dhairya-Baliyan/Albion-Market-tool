@@ -5,12 +5,13 @@ app = Flask(__name__)
 
 @app.route('/')
 def home():
-    opportunities = get_top_opportunities()
-    return render_template('index.html', opportunities=opportunities)
+    server = request.args.get('server', 'west')
+    opportunities = get_top_opportunities(server)
+    return render_template('index.html', opportunities=opportunities,server=server)
 
 @app.route('/api/autocomplete')
 def autocomplete():
-    query = request.args.get('q', '').strip()
+    query = request.args.get('q','').strip()
     if not query:
         return jsonify([])
     suggestions = search_recommendations(query)
@@ -18,18 +19,20 @@ def autocomplete():
 
 @app.route('/search')
 def search():
-    item = request.args.get('item', '')
+    item = request.args.get('item','')
+    server = request.args.get('server','west')
     if not item:
-        return render_template('index.html', error="Please Enter A Valid Search Term.")
+        return render_template('index.html',error="Please Enter A Valid Search Term.")
     results = search_items(item)
-    return render_template('results.html', results=results, query=item)
+    return render_template('results.html',results=results,query=item,server=server)
 
 @app.route('/prices')
 def prices():
     item_id = request.args.get('id')
     item_name = request.args.get('name')
+    server = request.args.get('server','west')
     location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Brecilien"
-    prices_data = fetch_prices(item_id,location)
+    prices_data = fetch_prices(item_id,location,server)
     analysis = analyze_prices(prices_data)
     filtered_prices = []
     for item in prices_data:

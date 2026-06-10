@@ -253,7 +253,7 @@
             top: 100%; 
             left: 0;
             width: 100%; 
-            background-color: #1a1f2c; /
+            background-color: #1a1f2c; 
             border: 1px solid #4a5568;
             border-radius: 8px;
             margin-top: 5px;
@@ -283,7 +283,32 @@
 
         <nav>
             <a href="/" class="logo">arbitrage<span>.ao</span></a>
-            <span class="live-badge">Live Data</span>
+            <div style="margin-left:auto; display:flex; align-items:center; gap:16px;">
+                <select name="server" id="serverSelect" onchange="changeServer(this.value)" style="
+                    background: #1a1a2e;
+                    border: 1px solid #2a2a3e;
+                    color: #e2e2e8;
+                    padding: 6px 12px;
+                    border-radius: 6px;
+                    font-family: 'Inter', sans-serif;
+                    font-size: 13px;
+                    outline: none;
+                    cursor: pointer;
+                ">
+                    <option value="west">🌍 West</option>
+                    <option value="east">🌏 East</option>
+                    <option value="europe">🗺 Europe</option>
+                </select>
+                <span style="
+                    color: #4ade80; 
+                    font-size: 12px;
+                    background: rgba(74,222,128,0.1);
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                ">{{ server | upper }} SERVER
+                </span>
+                <span class="live-badge">Live Data</span>
+            </div>
         </nav>
 
         <div class="container">
@@ -425,6 +450,26 @@
                     suggestionsBox.style.display = 'none';
                 }
             });
+        </script>
+        <script>
+            document.querySelector('form').addEventListener('submit', function() {
+                var server = document.getElementById('serverSelect').value;
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = 'server';
+                input.value = server;
+                this.appendChild(input);
+            });
+        </script>
+        <script>
+            // Set dropdown to current server on page load
+            const params = new URLSearchParams(window.location.search);
+            const currentServer = params.get('server') || 'west';
+            document.getElementById('serverSelect').value = currentServer;
+
+            function changeServer(server) {
+                window.location.href = '/?server=' + server;
+            }
         </script>
     </body>
 </html>

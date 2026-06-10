@@ -1,15 +1,22 @@
 import requests
 import time
 import os
+import threading
 
-_cache = None
-_cache_time = 0
+cached_opportunities = []
+_cache = {"west":None,"east":None,"europe":None}
+_cache_time = {"west":0,"east":0,"europe":0}
 CACHE_DURATION = 1800
 
-BASE_URL = "https://west.albion-online-data.com/api/v2/stats/prices"
+SERVERS = {
+    "west": "https://west.albion-online-data.com/api/v2/stats/prices",
+    "east": "https://east.albion-online-data.com/api/v2/stats/prices",
+    "europe": "https://europe.albion-online-data.com/api/v2/stats/prices"
+}
 
-def fetch_prices(item_id, location):
-    full_url = f"{BASE_URL}/{item_id}.json?locations={location}"
+def fetch_prices(item_id, location, server):
+    base_url = SERVERS.get(server, SERVERS["west"])
+    full_url = f"{base_url}/{item_id}.json?locations={location}"
     print(f"Calling Url: {full_url}")
 
     response = requests.get(full_url)
@@ -134,11 +141,11 @@ def analyze_prices(prices):
     results = results[:15]
     return results
 
-def get_top_opportunities():
+def get_top_opportunities(server):
     global _cache, _cache_time
     current_time = time.time()
-    if _cache and (current_time - _cache_time) < CACHE_DURATION:
-        return _cache   
+    if _cache[server] and (current_time - _cache_time[server]) < CACHE_DURATION:
+        return _cache[server] 
     popular_items = [
         # Bags & Capes
         {"id": "T4_BAG", "name": "Adept's Bag"},
@@ -172,7 +179,7 @@ def get_top_opportunities():
     results = []
     location = "Caerleon,Bridgewatch,Martlock,Lymhurst,Thetford,Fort Sterling,Brecilien"
     for item in popular_items:
-        prices = fetch_prices(item["id"], location)
+        prices = fetch_prices(item["id"], location, server)
         if not prices:
             continue
         analysis = analyze_prices(prices)
@@ -189,8 +196,8 @@ def get_top_opportunities():
     
     results.sort(key=lambda x: x["profit"], reverse=True)
     results = results[:6]
-    _cache = results
-    _cache_time = current_time
+    _cache[server]=results
+    _cache_time[server] = current_time
     return results  
 
 def search_recommendations(user_input):
@@ -234,4 +241,3 @@ def search_recommendations(user_input):
         if len(suggestions) >= 6:
             break
     return suggestions
-

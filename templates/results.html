@@ -124,7 +124,7 @@
             {% if results %}
             <div class="results-list">
                 {% for item in results %}
-                <a href="/prices?id={{ item.id }}&name={{ item.name }}" class="result-card">
+                <a href="/prices?id={{item.id}}&name={{item.name}}&server={{server}}" class="result-card">
                     <div style="display: flex; align-items: center; gap: 12px;">
                         <img src="https://render.albiononline.com/v1/item/{{item.id}}.png"
                             width="60" height="60"
