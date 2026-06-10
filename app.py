@@ -46,4 +46,4 @@ def prices():
     return render_template('prices.html', results=filtered_prices, query=item_name, analysis=analysis, item_id=item_id)
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=False)
