@@ -125,7 +125,7 @@ def analyze_prices(prices):
                 if sell_price < 1000:
                     continue
                 profit = int((sell_price * 0.96) - buy_price)
-                if profit <= 0 or profit > 50000:
+                if profit <= 0 or profit > 15000:
                     continue
                 if profit > 0:
                     results.append({
